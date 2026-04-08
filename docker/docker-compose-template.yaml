@@ -57,7 +57,11 @@ services:
       # Mount the storage directory to the container, for storing user files.
       - ./volumes/app/storage:/app/api/storage
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
+      test:
+        [
+          "CMD-SHELL",
+          "curl -sf http://localhost:$${DIFY_PORT:-5001}/health >/dev/null || exit 1",
+        ]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -152,12 +156,19 @@ services:
 
   # Frontend web application.
   web:
-    image: langgenius/dify-web:1.13.3
+    build:
+      context: ..
+      dockerfile: web/Dockerfile
+      args:
+        NEXT_PUBLIC_BASE_PATH: ${DIFY_WEB_BASE_PATH:-/seanergy}
+    image: dify-seanergy-web:local
+    pull_policy: never
     restart: always
     environment:
       CONSOLE_API_URL: ${CONSOLE_API_URL:-}
       APP_API_URL: ${APP_API_URL:-}
       AMPLITUDE_API_KEY: ${AMPLITUDE_API_KEY:-}
+      NEXT_PUBLIC_BASE_PATH: ${DIFY_WEB_BASE_PATH:-/seanergy}
       NEXT_PUBLIC_COOKIE_DOMAIN: ${NEXT_PUBLIC_COOKIE_DOMAIN:-}
       SENTRY_DSN: ${WEB_SENTRY_DSN:-}
       NEXT_TELEMETRY_DISABLED: ${NEXT_TELEMETRY_DISABLED:-0}
@@ -300,7 +311,7 @@ services:
       SERVER_KEY: ${PLUGIN_DAEMON_KEY:-lYkiYYT6owG+71oLerGzA7GXCgOT++6ovaezWAjpCjf+Sjc3ZtU+qUEi}
       MAX_PLUGIN_PACKAGE_SIZE: ${PLUGIN_MAX_PACKAGE_SIZE:-52428800}
       PPROF_ENABLED: ${PLUGIN_PPROF_ENABLED:-false}
-      DIFY_INNER_API_URL: ${PLUGIN_DIFY_INNER_API_URL:-http://api:5001}
+      DIFY_INNER_API_URL: ${PLUGIN_DIFY_INNER_API_URL:-http://api:${DIFY_PORT:-5001}}
       DIFY_INNER_API_KEY: ${PLUGIN_DIFY_INNER_API_KEY:-QaHbTe77CtuXmsfyhR7+vRjI/+XbV1AaFy691iy+kGDv2Jvy0/eAh8Y1}
       PLUGIN_REMOTE_INSTALLING_HOST: ${PLUGIN_DEBUGGING_HOST:-0.0.0.0}
       PLUGIN_REMOTE_INSTALLING_PORT: ${PLUGIN_DEBUGGING_PORT:-5003}
@@ -443,6 +454,8 @@ services:
       NGINX_PROXY_SEND_TIMEOUT: ${NGINX_PROXY_SEND_TIMEOUT:-3600s}
       NGINX_ENABLE_CERTBOT_CHALLENGE: ${NGINX_ENABLE_CERTBOT_CHALLENGE:-false}
       CERTBOT_DOMAIN: ${CERTBOT_DOMAIN:-}
+      DIFY_PORT: ${DIFY_PORT:-5001}
+      DIFY_WEB_BASE_PATH: ${DIFY_WEB_BASE_PATH:-/seanergy}
     depends_on:
       - api
       - web
