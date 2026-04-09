@@ -81,6 +81,7 @@ from .auth import (
     login,
     oauth,
     oauth_server,
+    register,
 )
 
 # Import billing controllers

@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import * as React from 'react'
+import InitialPasswordChangeDialog from '@/app/components/account/initial-password-change-dialog'
 import { AppInitializer } from '@/app/components/app-initializer'
 import AmplitudeProvider from '@/app/components/base/amplitude'
 import GA, { GaType } from '@/app/components/base/ga'
@@ -24,6 +25,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
                   <Header />
                 </HeaderWrapper>
                 <div className="relative flex h-0 shrink-0 grow flex-col overflow-y-auto bg-components-panel-bg">
+                  <InitialPasswordChangeDialog />
                   {children}
                 </div>
               </ModalContextProvider>

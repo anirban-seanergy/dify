@@ -86,15 +86,21 @@ class AccountStatus(enum.StrEnum):
 
 class Account(UserMixin, TypeBase):
     __tablename__ = "accounts"
-    __table_args__ = (sa.PrimaryKeyConstraint("id", name="account_pkey"), sa.Index("account_email_idx", "email"))
+    __table_args__ = (
+        sa.PrimaryKeyConstraint("id", name="account_pkey"),
+        sa.Index("account_email_idx", "email"),
+        sa.Index("account_username_idx", "username", unique=True, postgresql_where=sa.text("username IS NOT NULL")),
+    )
 
     id: Mapped[str] = mapped_column(
         StringUUID, insert_default=lambda: str(uuid4()), default_factory=lambda: str(uuid4()), init=False
     )
     name: Mapped[str] = mapped_column(String(255))
     email: Mapped[str] = mapped_column(String(255))
+    username: Mapped[str | None] = mapped_column(String(255), nullable=True, default=None)
     password: Mapped[str | None] = mapped_column(String(255), default=None)
     password_salt: Mapped[str | None] = mapped_column(String(255), default=None)
+    password_initial: Mapped[bool] = mapped_column(default=False, init=False)
     avatar: Mapped[str | None] = mapped_column(String(255), nullable=True, default=None)
     interface_language: Mapped[str | None] = mapped_column(String(255), default=None)
     interface_theme: Mapped[str | None] = mapped_column(String(255), nullable=True, default=None)

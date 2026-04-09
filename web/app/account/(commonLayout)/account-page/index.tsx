@@ -1,9 +1,7 @@
 'use client'
+import type { ChangeEvent } from 'react'
 import type { IItem } from '@/app/components/header/account-setting/collapse'
 import type { App } from '@/types/app'
-import {
-  RiGraduationCapFill,
-} from '@remixicon/react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -140,38 +138,38 @@ export default function AccountPage() {
             imageUrl={icon_url}
           />
         </div>
-        <div className="mt-[3px] text-text-secondary system-sm-medium">{item.name}</div>
+        <div className="mt-[3px] system-sm-medium text-text-secondary">{item.name}</div>
       </div>
     )
   }
 
   return (
     <>
-      <div className="pb-3 pt-2">
-        <h4 className="text-text-primary title-2xl-semi-bold">{t('account.myAccount', { ns: 'common' })}</h4>
+      <div className="pt-2 pb-3">
+        <h4 className="title-2xl-semi-bold text-text-primary">{t('account.myAccount', { ns: 'common' })}</h4>
       </div>
       <div className="mb-8 flex items-center rounded-xl bg-gradient-to-r from-background-gradient-bg-fill-chat-bg-2 to-background-gradient-bg-fill-chat-bg-1 p-6">
         <AvatarWithEdit avatar={userProfile.avatar_url} name={userProfile.name} onSave={mutateUserProfile} size="3xl" />
         <div className="ml-4">
-          <p className="text-text-primary system-xl-semibold">
+          <p className="system-xl-semibold text-text-primary">
             {userProfile.name}
             {isEducationAccount && (
               <PremiumBadge size="s" color="blue" className="ml-1 !px-2">
-                <RiGraduationCapFill className="mr-1 h-3 w-3" />
+                <span aria-hidden className="mr-1 i-ri-graduation-cap-fill h-3 w-3" />
                 <span className="system-2xs-medium">EDU</span>
               </PremiumBadge>
             )}
           </p>
-          <p className="text-text-tertiary system-xs-regular">{userProfile.email}</p>
+          <p className="system-xs-regular text-text-tertiary">{userProfile.email}</p>
         </div>
       </div>
       <div className="mb-8">
         <div className={titleClassName}>{t('account.name', { ns: 'common' })}</div>
         <div className="mt-2 flex w-full items-center justify-between gap-2">
-          <div className="flex-1 rounded-lg bg-components-input-bg-normal p-2 text-components-input-text-filled system-sm-regular">
+          <div className="flex-1 rounded-lg bg-components-input-bg-normal p-2 system-sm-regular text-components-input-text-filled">
             <span className="pl-1">{userProfile.name}</span>
           </div>
-          <div className="cursor-pointer rounded-lg bg-components-button-tertiary-bg px-3 py-2 text-components-button-tertiary-text system-sm-medium" onClick={handleEditName}>
+          <div className="cursor-pointer rounded-lg bg-components-button-tertiary-bg px-3 py-2 system-sm-medium text-components-button-tertiary-text" onClick={handleEditName}>
             {t('operation.edit', { ns: 'common' })}
           </div>
         </div>
@@ -179,11 +177,11 @@ export default function AccountPage() {
       <div className="mb-8">
         <div className={titleClassName}>{t('account.email', { ns: 'common' })}</div>
         <div className="mt-2 flex w-full items-center justify-between gap-2">
-          <div className="flex-1 rounded-lg bg-components-input-bg-normal p-2 text-components-input-text-filled system-sm-regular">
+          <div className="flex-1 rounded-lg bg-components-input-bg-normal p-2 system-sm-regular text-components-input-text-filled">
             <span className="pl-1">{userProfile.email}</span>
           </div>
           {systemFeatures.enable_change_email && (
-            <div className="cursor-pointer rounded-lg bg-components-button-tertiary-bg px-3 py-2 text-components-button-tertiary-text system-sm-medium" onClick={() => setShowUpdateEmail(true)}>
+            <div className="cursor-pointer rounded-lg bg-components-button-tertiary-bg px-3 py-2 system-sm-medium text-components-button-tertiary-text" onClick={() => setShowUpdateEmail(true)}>
               {t('operation.change', { ns: 'common' })}
             </div>
           )}
@@ -193,8 +191,8 @@ export default function AccountPage() {
         systemFeatures.enable_email_password_login && (
           <div className="mb-8 flex justify-between gap-2">
             <div>
-              <div className="mb-1 text-text-secondary system-sm-semibold">{t('account.password', { ns: 'common' })}</div>
-              <div className="mb-2 text-text-tertiary body-xs-regular">{t('account.passwordTip', { ns: 'common' })}</div>
+              <div className="mb-1 system-sm-semibold text-text-secondary">{t('account.password', { ns: 'common' })}</div>
+              <div className="mb-2 body-xs-regular text-text-tertiary">{t('account.passwordTip', { ns: 'common' })}</div>
             </div>
             <Button onClick={() => setEditPasswordModalVisible(true)}>{userProfile.is_password_set ? t('account.resetPassword', { ns: 'common' }) : t('account.setPassword', { ns: 'common' })}</Button>
           </div>
@@ -216,14 +214,14 @@ export default function AccountPage() {
       </div>
       {
         editNameModalVisible && (
-          <Dialog open={editNameModalVisible} onOpenChange={open => !open && setEditNameModalVisible(false)}>
+          <Dialog open={editNameModalVisible} onOpenChange={(open: boolean) => !open && setEditNameModalVisible(false)}>
             <DialogContent className="w-[420px]! p-6!">
-              <div className="mb-6 text-text-primary title-2xl-semi-bold">{t('account.editName', { ns: 'common' })}</div>
+              <div className="mb-6 title-2xl-semi-bold text-text-primary">{t('account.editName', { ns: 'common' })}</div>
               <div className={titleClassName}>{t('account.name', { ns: 'common' })}</div>
               <Input
                 className="mt-2"
                 value={editName}
-                onChange={e => setEditName(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setEditName(e.target.value)}
               />
               <div className="mt-10 flex justify-end">
                 <Button className="mr-2" onClick={() => setEditNameModalVisible(false)}>{t('operation.cancel', { ns: 'common' })}</Button>
@@ -241,9 +239,9 @@ export default function AccountPage() {
       }
       {
         editPasswordModalVisible && (
-          <Dialog open={editPasswordModalVisible} onOpenChange={open => !open && (setEditPasswordModalVisible(false), resetPasswordForm())}>
+          <Dialog open={editPasswordModalVisible} onOpenChange={(open: boolean) => !open && (setEditPasswordModalVisible(false), resetPasswordForm())}>
             <DialogContent className="w-[420px]! p-6!">
-              <div className="mb-6 text-text-primary title-2xl-semi-bold">{userProfile.is_password_set ? t('account.resetPassword', { ns: 'common' }) : t('account.setPassword', { ns: 'common' })}</div>
+              <div className="mb-6 title-2xl-semi-bold text-text-primary">{userProfile.is_password_set ? t('account.resetPassword', { ns: 'common' }) : t('account.setPassword', { ns: 'common' })}</div>
               {userProfile.is_password_set && (
                 <>
                   <div className={titleClassName}>{t('account.currentPassword', { ns: 'common' })}</div>
@@ -251,7 +249,7 @@ export default function AccountPage() {
                     <Input
                       type={showCurrentPassword ? 'text' : 'password'}
                       value={currentPassword}
-                      onChange={e => setCurrentPassword(e.target.value)}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) => setCurrentPassword(e.target.value)}
                     />
 
                     <div className="absolute inset-y-0 right-0 flex items-center">
@@ -266,14 +264,14 @@ export default function AccountPage() {
                   </div>
                 </>
               )}
-              <div className="mt-8 text-text-secondary system-sm-semibold">
+              <div className="mt-8 system-sm-semibold text-text-secondary">
                 {userProfile.is_password_set ? t('account.newPassword', { ns: 'common' }) : t('account.password', { ns: 'common' })}
               </div>
               <div className="relative mt-2">
                 <Input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
-                  onChange={e => setPassword(e.target.value)}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center">
                   <Button
@@ -285,12 +283,12 @@ export default function AccountPage() {
                   </Button>
                 </div>
               </div>
-              <div className="mt-8 text-text-secondary system-sm-semibold">{t('account.confirmPassword', { ns: 'common' })}</div>
+              <div className="mt-8 system-sm-semibold text-text-secondary">{t('account.confirmPassword', { ns: 'common' })}</div>
               <div className="relative mt-2">
                 <Input
                   type={showConfirmPassword ? 'text' : 'password'}
                   value={confirmPassword}
-                  onChange={e => setConfirmPassword(e.target.value)}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setConfirmPassword(e.target.value)}
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center">
                   <Button

@@ -1,7 +1,7 @@
 // TypeScript type definitions for custom JSX elements
 // Custom JSX elements for emoji-mart web components
 
-import 'react'
+import type * as React from 'react'
 
 declare module 'react' {
   namespace JSX {

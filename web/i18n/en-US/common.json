@@ -26,6 +26,8 @@
   "account.changeEmail.unAvailableEmail": "This email is temporarily unavailable.",
   "account.changeEmail.verifyEmail": "Verify your current email",
   "account.changeEmail.verifyNew": "Verify your new email",
+  "account.changePasswordRequired": "You must change your password",
+  "account.changePasswordRequiredTip": "This is your initial password. Please set a new permanent password for your account.",
   "account.confirmPassword": "Confirm password",
   "account.currentPassword": "Current password",
   "account.delete": "Delete Account",

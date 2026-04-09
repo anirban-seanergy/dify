@@ -133,6 +133,12 @@ class EmailAlreadyInUseError(BaseHTTPException):
     code = 400
 
 
+class UsernameAlreadyExistsError(BaseHTTPException):
+    error_code = "username_already_in_use"
+    description = "Username is already taken. Please choose a different one."
+    code = 400
+
+
 class OwnerTransferLimitError(BaseHTTPException):
     error_code = "owner_transfer_limit"
     description = "Too many failed owner transfer attempts. Please try again in 24 hours."

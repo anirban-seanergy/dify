@@ -57,6 +57,7 @@ class Account(_AccountAvatar):
     name: str
     email: str
     is_password_set: bool
+    password_initial: bool = False
     interface_language: str | None = None
     interface_theme: str | None = None
     timezone: str | None = None

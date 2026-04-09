@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import * as React from 'react'
+import InitialPasswordChangeDialog from '@/app/components/account/initial-password-change-dialog'
 import { AppInitializer } from '@/app/components/app-initializer'
 import InSiteMessageNotification from '@/app/components/app/in-site-message/notification'
 import AmplitudeProvider from '@/app/components/base/amplitude'
@@ -31,6 +32,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
                   <Header />
                 </HeaderWrapper>
                 <RoleRouteGuard>
+                  <InitialPasswordChangeDialog />
                   {children}
                 </RoleRouteGuard>
                 <InSiteMessageNotification />

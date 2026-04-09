@@ -25,6 +25,7 @@ export type UserProfileResponse = {
   avatar: string
   avatar_url: string | null
   is_password_set: boolean
+  password_initial?: boolean
   interface_language?: string
   interface_theme?: string
   timezone?: string

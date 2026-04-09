@@ -255,9 +255,6 @@
     }
   },
   "app/account/(commonLayout)/account-page/index.tsx": {
-    "tailwindcss/enforce-consistent-class-order": {
-      "count": 15
-    },
     "ts/no-explicit-any": {
       "count": 1
     }

@@ -227,6 +227,26 @@ class AccountService:
         return account
 
     @staticmethod
+    def authenticate_with_username(username: str, password: str) -> Account:
+        """authenticate account with username and password"""
+        account = db.session.scalar(select(Account).where(Account.username == username).limit(1))
+        if not account:
+            raise AccountPasswordError("Invalid username or password.")
+
+        if account.status == AccountStatus.BANNED:
+            raise AccountLoginError("Account is banned.")
+
+        if account.password is None or not compare_password(password, account.password, account.password_salt):
+            raise AccountPasswordError("Invalid username or password.")
+
+        if account.status == AccountStatus.PENDING:
+            account.status = AccountStatus.ACTIVE
+            account.initialized_at = naive_utc_now()
+
+        db.session.commit()
+        return account
+
+    @staticmethod
     def update_account_password(account, password, new_password):
         """update account password"""
         if account.password and not compare_password(password, account.password, account.password_salt):
@@ -244,6 +264,7 @@ class AccountService:
         base64_password_hashed = base64.b64encode(password_hashed).decode()
         account.password = base64_password_hashed
         account.password_salt = base64_salt
+        account.password_initial = False
         db.session.add(account)
         db.session.commit()
         return account
@@ -256,6 +277,8 @@ class AccountService:
         password: str | None = None,
         interface_theme: str = "light",
         is_setup: bool | None = False,
+        username: str | None = None,
+        password_initial: bool = False,
     ) -> Account:
         """create account"""
         if not FeatureService.get_system_features().is_allow_register and not is_setup:
@@ -290,8 +313,10 @@ class AccountService:
         account = Account(
             name=name,
             email=email,
+            username=username,
             password=password_to_set,
             password_salt=salt_to_set,
+            password_initial=password_initial,
             interface_language=interface_language,
             interface_theme=interface_theme,
             timezone=language_timezone_mapping.get(interface_language, "UTC"),
@@ -303,11 +328,21 @@ class AccountService:
 
     @staticmethod
     def create_account_and_tenant(
-        email: str, name: str, interface_language: str, password: str | None = None
+        email: str,
+        name: str,
+        interface_language: str,
+        password: str | None = None,
+        username: str | None = None,
+        password_initial: bool = False,
     ) -> Account:
         """create account"""
         account = AccountService.create_account(
-            email=email, name=name, interface_language=interface_language, password=password
+            email=email,
+            name=name,
+            interface_language=interface_language,
+            password=password,
+            username=username,
+            password_initial=password_initial,
         )
 
         try:
